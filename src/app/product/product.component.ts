@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Packet } from 'mqtt';
 
 import { MQTTService } from '../../app/mqtt/mqtt.service';
 import { Product } from './product.model';
@@ -27,10 +28,10 @@ export class ProductComponent implements OnInit {
   ngOnInit() {}
 
   public onConnect = () => {
-    const forSaleObservable = this.mqtt.geProducts();
+    const forSaleObservable = this.mqtt.payloadSubject;
 
-    forSaleObservable.subscribe((payload: string) => {
-      this.newProduct = JSON.parse(payload);
+    forSaleObservable.subscribe((message: Packet) => {
+      this.newProduct = JSON.parse(message.toString());
       this.addToList();
     });
   }

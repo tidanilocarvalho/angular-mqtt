@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Subject } from 'rxjs';
 
 import * as mqtt from '../../vendor/mqtt';
 
@@ -8,6 +8,12 @@ export class MQTTService {
   private client: mqtt.Client;
   private resolvePromise: (...args: any[]) => void;
   private topic = 'inatel/tipofweek/product/forsale';
+
+  public payloadSubject: Subject<mqtt.Packet>;
+
+  public constructor() {
+    this.payloadSubject = new Subject<mqtt.Packet>();
+  }
 
   public tryConnect(): Promise<{}> {
     if (this.client === null) {
@@ -58,18 +64,8 @@ export class MQTTService {
     // const packet: mqtt.Packet = args[2];
 
     if (payload.toString()) {
-      this.geProducts().next(payload.toString());
-      console.log(payload.toString());
+      this.payloadSubject.next(payload);
+      console.log('Receiving: ' + payload.toString());
     }
-  }
-
-  public geProducts(): any {
-    const forSaleObservable = new Observable(observer => {
-           setTimeout(() => {
-               observer.next('{"name":"Product 1","value":1.5,"forSale":true}');
-           }, 1000);
-    });
-
-    return forSaleObservable;
   }
 }
