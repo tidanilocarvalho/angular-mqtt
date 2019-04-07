@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import * as mqtt from '../../vendor/mqtt';
 
 @Injectable()
 export class MQTTService {
-  public messages: Subject<string>;
   private client: mqtt.Client;
   private resolvePromise: (...args: any[]) => void;
+  private topic = 'inatel/tipofweek/product/forsale';
 
   public tryConnect(): Promise<{}> {
     if (this.client === null) {
@@ -34,11 +34,11 @@ export class MQTTService {
   }
 
   public publish(message?: string) {
-    this.client.publish('inatel/tipofweek/product/forsale', message);
+    this.client.publish(this.topic, message);
   }
 
   public subscribe(): void {
-    this.client.subscribe('inatel/tipofweek/product/forsale');
+    this.client.subscribe(this.topic);
   }
 
   public onConnect = () => {
@@ -54,11 +54,22 @@ export class MQTTService {
 
   public onMessage = (...args: any[]) => {
     // const topic = args[0];
-    const message = args[1];
+    const payload = args[1];
     // const packet: mqtt.Packet = args[2];
 
-    if (message.toString()) {
-      console.log(message.toString());
+    if (payload.toString()) {
+      this.geProducts().next(payload.toString());
+      console.log(payload.toString());
     }
+  }
+
+  public geProducts(): any {
+    const forSaleObservable = new Observable(observer => {
+           setTimeout(() => {
+               observer.next('{"name":"Product 1","value":1.5,"forSale":true}');
+           }, 1000);
+    });
+
+    return forSaleObservable;
   }
 }

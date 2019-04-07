@@ -24,11 +24,15 @@ export class ProductComponent implements OnInit {
       .catch(this.onError);
    }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
-   public onConnect = () => {
-    this.messages = this.mqtt.messages;
+  public onConnect = () => {
+    const forSaleObservable = this.mqtt.geProducts();
+
+    forSaleObservable.subscribe((payload: string) => {
+      this.newProduct = JSON.parse(payload);
+      this.addToList();
+    });
   }
 
   public onError = () => {
