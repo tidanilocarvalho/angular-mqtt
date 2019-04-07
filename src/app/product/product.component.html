@@ -1,0 +1,46 @@
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12">
+      <p>Add new Product ({{ products.length }})</p>
+
+      <label>Name</label>
+      <input type="text" class="form-control" [(ngModel)]="name">
+      <label>Value</label>
+      <input type="number" class="form-control" [(ngModel)]="value">
+      <label>For Sale</label>
+      <br/>
+      <input type="checkbox" [(ngModel)]="forSale">
+
+      <br/>
+
+      <button
+        class="btn btn-success"
+        (click)="onAddProduct()"
+        [disabled]="isAddButtonEnabled()">
+        Add Product
+      </button>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12">
+          Product List ({{ products.length }})
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-12">
+        <div
+          class="panel panel-default"
+          *ngFor="let product of products">
+          <div class="panel-heading">Product {{ product.name }}</div>
+          <div class="panel-body" *ngIf="product.forSale" style="background-color: #C2C2C2">
+            <p>
+              <strong>Value {{ product.value }}</strong>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
