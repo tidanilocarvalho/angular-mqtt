@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
     <div class="col-xs-12">
-      <p>Add new Product ({{ products.length }})</p>
+      <p>Add new Product</p>
 
       <label>Name</label>
       <input type="text" class="form-control" [(ngModel)]="name">
@@ -19,7 +19,13 @@
         [disabled]="isAddButtonEnabled()">
         Add Product
       </button>
-  </div>
+
+      <button
+        class="btn btn-primary"
+        (click)="onClearProductList()">
+        Clear Product List
+      </button>
+    </div>
 
   <div class="container">
     <div class="row">
@@ -37,6 +43,29 @@
           <div class="panel-body" *ngIf="product.forSale" style="background-color: #C2C2C2">
             <p>
               <strong>Value {{ product.value }}</strong>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12">
+          Product For Sale List ({{ productsForSale.length }})
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-12">
+        <div
+          class="panel panel-default"
+          *ngFor="let productForSale of productsForSale">
+          <div class="panel-heading">Product {{ productForSale.name }}</div>
+          <div class="panel-body" *ngIf="productForSale.forSale" style="background-color: #C2C2C2">
+            <p>
+              <strong>Value {{ productForSale.value }}</strong>
             </p>
           </div>
         </div>

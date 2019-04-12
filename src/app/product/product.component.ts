@@ -17,6 +17,7 @@ export class ProductComponent implements OnInit {
 
   newProduct: Product;
   products: Product[] = [];
+  productsForSale: Product[] = [];
 
   constructor(private mqtt: MQTTService) {
     this.mqtt
@@ -32,7 +33,7 @@ export class ProductComponent implements OnInit {
 
     forSaleObservable.subscribe((message: Packet) => {
       this.newProduct = JSON.parse(message.toString());
-      this.addToList();
+      this.productsForSale.push(this.newProduct);
     });
   }
 
@@ -42,6 +43,12 @@ export class ProductComponent implements OnInit {
 
   isAddButtonEnabled() {
     return !this.name || !this.value;
+  }
+
+  onClearProductList() {
+    this.products = [];
+    this.productsForSale = [];
+    this.resetValues();
   }
 
   onAddProduct() {
@@ -57,7 +64,9 @@ export class ProductComponent implements OnInit {
   }
 
   addToList() {
-    this.products.push(this.newProduct);
+    if (!this.forSale) {
+      this.products.push(this.newProduct);
+    }
   }
 
   publishForSale() {
